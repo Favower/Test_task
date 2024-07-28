@@ -1,6 +1,5 @@
 {
-    "PostgresURL": "postgres://user:password@host.docker.internal:5432/messages_db",
-    "KafkaBroker": "localhost:9092",
-    "KafkaTopic": "your_topic"
-  }
-  
+  "PostgresURL": "postgres://myuser:mypassword@postgres:5432/mydb",
+  "KafkaBroker": "kafka:9092",
+  "KafkaTopic": "your_topic"
+}
