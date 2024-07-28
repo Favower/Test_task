@@ -1,5 +1,0 @@
-{
-    "PostgresURL": "postgres://user:password@localhost:5432/messages_db",
-    "KafkaBroker": "localhost:9092",
-    "KafkaTopic": "messages"
-}

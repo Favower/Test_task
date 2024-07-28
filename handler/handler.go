@@ -1,48 +1,55 @@
 package handler
 
 import (
+    "net/http"
     "github.com/gin-gonic/gin"
-    "test_from_Messaggio/model"
     "test_from_Messaggio/repository"
     "test_from_Messaggio/kafka"
-    "net/http"
+    "test_from_Messaggio/model"
 )
 
 type Handler struct {
-    Repo   repository.Repository
-    KafkaProducer kafka.Producer
+    repo          *repository.Repository
+    kafkaProducer *kafka.Producer
 }
 
-func NewHandler(repo repository.Repository, kafkaProducer kafka.Producer) *Handler {
-    return &Handler{Repo: repo, KafkaProducer: kafkaProducer}
+func NewHandler(repo *repository.Repository, kafkaProducer *kafka.Producer) *Handler {
+    return &Handler{repo: repo, kafkaProducer: kafkaProducer}
 }
 
 func (h *Handler) CreateMessage(c *gin.Context) {
-    var message model.Message
+    var message struct {
+        Content string `json:"content"`
+    }
     if err := c.ShouldBindJSON(&message); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
         return
     }
 
-    if err := h.Repo.SaveMessage(&message); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+    // Create and save the message
+    msg := &model.Message{
+        Content:   message.Content,
+        Processed: false,
+    }
+    if err := h.repo.SaveMessage(msg); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not save message"})
         return
     }
 
-    if err := h.KafkaProducer.SendMessage(&message); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+    // Produce message to Kafka
+    if err := h.kafkaProducer.ProduceMessage([]byte("key"), []byte(message.Content)); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not produce message"})
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"message": "Message created successfully"})
+    c.JSON(http.StatusOK, gin.H{"message": "Message created"})
 }
 
 func (h *Handler) GetProcessedMessages(c *gin.Context) {
-    messages, err := h.Repo.GetProcessedMessages()
+    messages, err := h.repo.GetProcessedMessages()
     if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve messages"})
         return
     }
-
     c.JSON(http.StatusOK, messages)
 }

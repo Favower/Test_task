@@ -1,19 +1,18 @@
 package kafka
 
 import (
-    "context"
     "github.com/segmentio/kafka-go"
-    "test_from_Messaggio/model"
-    "encoding/json"
+    "log"
+    "context"
 )
 
 type Producer struct {
-    Writer *kafka.Writer
+    writer *kafka.Writer
 }
 
 func NewProducer(broker, topic string) *Producer {
     return &Producer{
-        Writer: &kafka.Writer{
+        writer: &kafka.Writer{
             Addr:     kafka.TCP(broker),
             Topic:    topic,
             Balancer: &kafka.LeastBytes{},
@@ -21,16 +20,20 @@ func NewProducer(broker, topic string) *Producer {
     }
 }
 
-func (p *Producer) SendMessage(message *model.Message) error {
-    msgBytes, err := json.Marshal(message)
-    if err != nil {
-        return err
-    }
-
-    return p.Writer.WriteMessages(context.Background(),
+func (p *Producer) ProduceMessage(key, value []byte) error {
+    err := p.writer.WriteMessages(context.Background(),
         kafka.Message{
-            Key:   []byte(string(message.ID)),
-            Value: msgBytes,
+            Key:   key,
+            Value: value,
         },
     )
+    if err != nil {
+        log.Printf("could not write message %v", err)
+        return err
+    }
+    return nil
+}
+
+func (p *Producer) Close() error {
+    return p.writer.Close()
 }

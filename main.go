@@ -5,15 +5,15 @@ import (
     "log"
     "github.com/gin-gonic/gin"
     "github.com/jackc/pgx/v4"
-    "your_project_name/config"
-    "your_project_name/handler"
-    "your_project_name/repository"
-    "your_project_name/kafka"
+    "test_from_Messaggio/config"
+    "test_from_Messaggio/handler"
+    "test_from_Messaggio/repository"
+    "test_from_Messaggio/kafka"
 )
 
 func main() {
     cfg, err := config.LoadConfig()
-    if err != nil {
+    if (err != nil) {
         log.Fatalf("could not load config: %v", err)
     }
 
