@@ -7,7 +7,7 @@ COPY go.sum ./
 RUN go mod download
 
 COPY . ./
-COPY config.json ./
+COPY config/config.json ./config/
 
 RUN go build -o /main
 
