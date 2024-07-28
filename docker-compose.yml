@@ -1,14 +1,25 @@
 services:
   postgres:
-    image: postgres:13
+    image: postgres:latest
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
+      - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      bash -c "until pg_isready -U postgres; do echo 'Waiting for PostgreSQL...'; sleep 1; done;
+      psql -U postgres -c 'CREATE ROLE myuser WITH LOGIN PASSWORD '\''mypassword'\'';' &&
+      psql -U postgres -c 'CREATE DATABASE messages_db WITH OWNER myuser;' &&
+      psql -U postgres -d messages_db -c 'CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        content TEXT NOT NULL,
+        processed BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );' &&
+      exec postgres"
 
   kafka:
     image: wurstmeister/kafka:latest
