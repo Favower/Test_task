@@ -24,7 +24,7 @@ services:
       - zookeeper
 
   zookeeper:
-    image: wurstmeister/zookeeper:3.7
+    image: wurstmeister/zookeeper:latest
     ports:
       - "2181:2181"
 
@@ -33,7 +33,7 @@ services:
     environment:
       POSTGRES_URL: postgres://myuser:mypassword@postgres:5432/mydb
       KAFKA_BROKER: kafka:9092
-      KAFKA_TOPIC: mytopic
+      KAFKA_TOPIC: your_topic
     ports:
       - "8080:8080"
     depends_on:
