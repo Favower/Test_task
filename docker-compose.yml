@@ -42,7 +42,7 @@ services:
   app:
     build: .
     environment:
-      POSTGRES_URL: postgres://myuser:mypassword@postgres:5432/mydb
+      POSTGRES_URL: postgres://myuser:mypassword@postgres:5432/messages_db
       KAFKA_BROKER: kafka:9092
       KAFKA_TOPIC: your_topic
     ports:
@@ -52,4 +52,4 @@ services:
       - kafka
 
 volumes:
-  postgres-data:
+  postgres_data:

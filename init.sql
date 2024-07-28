@@ -17,7 +17,9 @@ END
 $$;
 
 -- Connect to the database and create the table
-\c messages_db;
+-- NOTE: Remove the \c command as it will not work in a non-interactive SQL script
+
+\connect messages_db;
 
 CREATE TABLE IF NOT EXISTS messages (
     id SERIAL PRIMARY KEY,
