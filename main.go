@@ -5,10 +5,10 @@ import (
     "log"
     "github.com/gin-gonic/gin"
     "github.com/jackc/pgx/v4"
-    "test_from_Messaggio/config"
-    "test_from_Messaggio/handler"
-    "test_from_Messaggio/repository"
-    "test_from_Messaggio/kafka"
+    "app/config"
+    "app/handler"
+    "app/repository"
+    "app/kafka"
 )
 
 func main() {

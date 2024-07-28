@@ -1,4 +1,4 @@
-module test_from_Messaggio
+module app
 
 go 1.20
 

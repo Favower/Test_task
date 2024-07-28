@@ -3,9 +3,9 @@ package handler
 import (
     "net/http"
     "github.com/gin-gonic/gin"
-    "test_from_Messaggio/repository"
-    "test_from_Messaggio/kafka"
-    "test_from_Messaggio/model"
+    "app/repository"
+    "app/kafka"
+    "app/model"
 )
 
 type Handler struct {

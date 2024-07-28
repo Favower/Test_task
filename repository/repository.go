@@ -3,7 +3,7 @@ package repository
 import (
     "context"
     "github.com/jackc/pgx/v4"
-    "test_from_Messaggio/model"
+    "app/model"
 )
 
 type Repository struct {

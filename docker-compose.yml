@@ -7,7 +7,6 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     command: >
       bash -c "until pg_isready -U postgres; do echo 'Waiting for PostgreSQL...'; sleep 1; done;
